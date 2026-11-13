@@ -1,0 +1,48 @@
+<!-- Firebase SDK və Google Giriş Skripti -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+    // Sizin Firebase konfiqurasiyanız
+    const firebaseConfig = {
+        apiKey: "AIzaSyBKK6G8FqmRBBaxnp1bBsAhM8QTNyowiuk",
+        authDomain: "grade-english.firebaseapp.com",
+        projectId: "grade-english",
+        storageBucket: "grade-english.appspot.com",
+        messagingSenderId: "14387944108",
+        appId: "1:14387944108:web:07db39faf94cb342bbdd09"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    // --- İCAZƏ VERİLƏN E-POÇTLARIN SİYAHISI ---
+    const allowedEmails = [
+        "vusala.gajarova11@gmail.com"
+        // İstəsəniz buraya başqa e-poçtlar da əlavə edə bilərsiniz
+    ];
+
+    // Giriş funksiyası
+    window.loginWithGoogle = function() {
+        signInWithPopup(auth, provider).catch((error) => {
+            console.error("Giriş xətası: ", error.message);
+        });
+    };
+
+    // İstifadəçi daxil olduqda yoxlama
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            if (allowedEmails.includes(user.email)) {
+                // Əgər siyahıdadırsa, müəllim kimi daxil et
+                if (typeof hc2Login === "function") {
+                    hc2Login("teacher");
+                }
+            } else {
+                // Siyahıda yoxdursa, çıxar və xəta ver
+                auth.signOut();
+                alert("Bu hesabla daxil olmağa icazəniz yoxdur: " + user.email);
+            }
+        }
+    });
+</script>
